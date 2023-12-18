@@ -9,6 +9,10 @@ import com.anton.demo.service.DepartmentService;
 import com.anton.demo.util.ResponseUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +32,16 @@ public class DepartmentServiceImpl implements DepartmentService {
     ModelMapper modelMapper;
 
     @Override
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "departmentListCache", allEntries = true),
+                    @CacheEvict(value = "departmentByIdCache", allEntries = true),
+            },
+            put   = {
+                    @CachePut(value = "departmentListCache"),
+                    @CachePut(value = "departmentByIdCache")
+            }
+    )
     public Response<DepartmentResponseDto> saveDepartment(DepartmentRequestDto departmentRequestDto) {
         Response<DepartmentResponseDto> response = new Response<>();
 
@@ -46,6 +60,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
+    @Cacheable(value = "departmentListCache", sync = true)
     public Response<List<DepartmentResponseDto>> getAllDepartment() {
         Response<List<DepartmentResponseDto>> response = new Response<>();
 
@@ -62,6 +77,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
+    @Cacheable(value = "departmentByIdCache", sync = true)
     public Response<DepartmentResponseDto> getDepartmentById(Long id) {
         Response<DepartmentResponseDto> response = new Response<>();
 
@@ -76,6 +92,16 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "departmentListCache", allEntries = true),
+                    @CacheEvict(value = "departmentByIdCache", allEntries = true),
+            },
+            put   = {
+                    @CachePut(value = "departmentListCache"),
+                    @CachePut(value = "departmentByIdCache")
+            }
+    )
     public Response<DepartmentResponseDto> updateDepartment(DepartmentRequestDto departmentRequestDto, Long id) {
         Response<DepartmentResponseDto> response = new Response<>();
 

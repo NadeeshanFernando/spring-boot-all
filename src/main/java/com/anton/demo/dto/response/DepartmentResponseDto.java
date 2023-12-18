@@ -2,6 +2,7 @@ package com.anton.demo.dto.response;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -13,7 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class DepartmentResponseDto {
+public class DepartmentResponseDto implements Serializable {
     public Long id;
     public String deptName;
 }
